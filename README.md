@@ -1,6 +1,6 @@
 # 拓扑图
 
-![demo](public/demo.png)
+![demo](example/demo.png)
 
 ## 安装
 

@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+$lineWith: 30px;
+$bgColor: #fff;
+
+.ui-topology{
+    white-space: nowrap;
+    .label{
+        display: inline-block;
+        vertical-align: middle;
+        padding: 12px 30px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f7f8f9;
+        margin: 5px 0;
+        position: relative;
+        z-index: 1;
+        font-size: 12px;
+        color: #74767a;
+
+        .closeBtn{
+            position: absolute;
+            right: -7.5px;
+            top: -10px;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        &.label-cursor{
+            cursor: pointer;
+
+            &:hover{
+                background-color: #d0d1d4;
+            }
+        }
+
+        &.label-type-error{
+            background-color: #ff6655;
+            color: #fff;
+
+            &.label-cursor:hover{
+                background-color: #ee5544;
+            }
+        }
+
+        &.label-type-success{
+            background-color: #00bb88;
+            color: #fff;
+
+            &.label-cursor:hover{
+                background-color: #00aa77;
+            }
+        }
+
+        &-border-right{
+            margin-right: $lineWith;
+            &:after{
+                content: '';
+                position: absolute;
+                width: $lineWith + 1;
+                height: 1px;
+                background: #999999;
+                left: 100%;
+                top: 50%;
+            }
+        }
+
+        &-border-left{
+            &:before{
+                content: '';
+                position: absolute;
+                width: $lineWith;
+                height: 1px;
+                background: #999999;
+                right: 100%;
+                top: 50%;
+            }
+        }
+    }
+    .label,
+    .sub{
+        display: inline-block;
+        vertical-align: middle;
+        left: -1px;
+    }
+    .sub{
+        position: relative;
+        padding-left: $lineWith;
+        &:before{
+            content: '';
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background: #999999;
+            left: 0;
+            top: 0;
+        }
+    }
+    .item{
+        position: relative;
+        font-size: 0;
+        //padding: 5px 0;
+        &:first-child:before{
+            content: '';
+            position: absolute;
+            width: 1px;
+            height: 50%;
+            background: $bgColor;
+            left: -$lineWith;
+            top: 0;
+        }
+        &:last-child:after{
+            content: '';
+            position: absolute;
+            width: 1px;
+            height: 50%;
+            background: $bgColor;
+            left: -$lineWith;
+            bottom: 0;
+        }
+    }
+
+    .level-1 > .label{
+        font-size: 14px;
+    }
+}

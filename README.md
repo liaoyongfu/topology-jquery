@@ -10,7 +10,7 @@ yarn add @share/topology-jquery
 npm install @share/topology-jquery --save
 ````
 
-或者到gitlab地址中下载：
+或者到gitlab地址中下载：http://192.168.0.62:88/components/topology-jquery/tree/master/dist
 
 ## 使用
 

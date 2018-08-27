@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-$lineWith: 30px;
+$lineWith: 40px;
 $bgColor: #fff;
 
 .ui-topology{
@@ -122,5 +122,16 @@ $bgColor: #fff;
 
     .level-1 > .label{
         font-size: 14px;
+    }
+
+    .toggleBtn{
+        position: absolute;
+        font-size: 14px;
+        right: -($lineWith / 2 + 5.5);
+        top: 50%;
+        margin-top: -6.5px;
+        color: #999;
+        z-index: 1;
+        cursor: pointer;
     }
 }

@@ -11,9 +11,12 @@ require('./index.scss');
                 cursor: 'default',
                 showCloseBtn: false,
                 closeTitle: '关闭',
+                collapsedTitle: '收起',
+                expandedTitle: item => item.children && item.children.length > 0 ? '展开' : '添加节点',
                 setType: () => {},
+                onClick: () => {},
                 setClassName: () => {},
-                onClose: () => {}
+                onClose: () => {},
             }, options);
 
             this.addUnitId(this.options.data);
@@ -42,7 +45,7 @@ require('./index.scss');
         }
 
         renderDom(data, level = 1, hasParent = false) {
-            const { renderLabel, setClassName, closeTitle, cursor, showCloseBtn, setType } = this.options;
+            const { renderLabel, setClassName, closeTitle, cursor, showCloseBtn, setType, collapsedTitle, expandedTitle } = this.options;
             const closeBtn = (item) => (`
                 <a title="${closeTitle}" data-id="${item.__id__}" class="closeBtn" href="javascript:;">
                     <i class="fa fa-times-circle" />
@@ -53,16 +56,21 @@ require('./index.scss');
                 let item = data[i];
                 topology += (`
                     <div class="item ${`level-${level}`}">
-                        <div class="label 
+                        <div data-level="${level}" data-id="${item.__id__}" class="label 
                             ${item.children && item.children.length > 1 ? 'label-border-right' : ''} 
                             ${hasParent ? 'label-border-left' : ''} 
                             ${cursor === 'pointer' ? 'label-cursor' : ''} ${setType(item) ? `label-type-${setType(item)}` : ''} ${setClassName(item) || ''}">
                             ${renderLabel ? renderLabel(item) : item.label}
                             ${typeof showCloseBtn === 'function' ? showCloseBtn(item, data) ? closeBtn(item) : '' : showCloseBtn ? closeBtn(item) : ''}
+                            ${!item.children || item.children.length <= 0 ? `<i title="${typeof expandedTitle === 'function' ? expandedTitle(item) : expandedTitle}" class="toggleBtn fa fa-plus-circle"></i>` : ''}
+                            ${item.children && item.children.length > 0 ? `<i title="${collapsedTitle}" class="toggleBtn toggleBtn-collapse fa fa-minus-circle"></i>` : ''}
                         </div>
-                        <div class="sub">
-                            ${item.children ? this.renderDom(item.children, level + 1, true) : ''}
-                        </div>
+                        ${item.children && item.children.length > 0 ? `
+                            <div class="sub">
+                                ${item.children ? this.renderDom(item.children, level + 1, true) : ''}
+                            </div>
+                        ` : ''}
+                        
                     </div>
                 `)
             }
@@ -70,24 +78,72 @@ require('./index.scss');
             return topology;
         }
 
+        find(arr, id){
+            for(let i = 0; i < arr.length; i++){
+                if(arr[i].__id__ === id){
+                    return arr[i];
+                }else if(arr[i].children){
+                    return this.find(arr[i].children, id);
+                }
+            }
+        }
+
         addEvent(){
-            const { onClose, data } = this.options;
-            $(this.elem).on('click', '.closeBtn', function(){
+            const { onClose, onClick, data, onAdd } = this.options;
+            const self = this;
+
+            // 关闭按钮
+            $(this.elem).on('click', '.closeBtn', function(e){
+                e.stopPropagation();
                 if(onClose){
                     const id = $(this).data('id');
 
-                    const find = (arr) => {
-                        for(let i = 0; i < arr.length; i++){
-                            if(arr[i].__id__ === id){
-                                return arr[i];
-                            }else if(arr[i].children){
-                                return find(arr[i].children);
-                            }
-                        }
-                    };
-
-                    onClose(find(data), data, this.parentNode);
+                    onClose(self.find(data, id), data, e);
                 }
+            });
+
+            // 点击事件
+            $(this.elem).on('click', '.label', function(e){
+                e.stopPropagation();
+                const id = $(this).data('id');
+
+                onClick(self.find(data, id), data, e);
+            });
+
+            // 收起或展开
+            $(this.elem).on('click', '.toggleBtn', function(e){
+                e.stopPropagation();
+                const { expandedTitle, collapsedTitle } = self.options;
+                const $sub = $(this).parent().siblings('.sub');
+                const curElem = this;
+                const id = $(this).parent().data('id');
+
+                if($sub.length > 0){
+                    if($sub.is(":visible")){
+                        $(curElem).parent().removeClass('label-border-right');
+                        $sub.hide();
+                    }else{
+                        $(curElem).parent().addClass('label-border-right');
+                        $sub.show();
+                    }
+                    self.adjustItem();
+                }else{
+                    // 触发添加事件
+                    const level = parseInt($(this).parent().data('level'));
+                    onAdd && onAdd(self.find(data, id), function(newNodes){
+                        $(curElem).parent().addClass('label-border-right');
+                        const newHtml = self.renderDom(newNodes, level + 1, true);
+                        $("<div class='sub'>" + newHtml + "</div>").insertAfter($(curElem).parent());
+                        self.adjustItem();
+                    }, e);
+                }
+
+                if($(this).hasClass('fa-plus-circle')){
+                    $(this).attr('title', collapsedTitle);
+                }else{
+                    $(this).attr('title', typeof expandedTitle === 'function' ? expandedTitle(self.find(data, id)) : expandedTitle);
+                }
+                $(this).toggleClass('fa-plus-circle').toggleClass('fa-minus-circle');
             });
         }
 
@@ -96,11 +152,13 @@ require('./index.scss');
 
             items.each(function(){
                 const next = this.nextElementSibling;
-                const first = next.firstElementChild;
-                const last = next.lastElementChild;
+                if(next){
+                    const first = next.firstElementChild;
+                    const last = next.lastElementChild;
 
-                if(first && last){
-                    this.style.top = (first.offsetHeight - last.offsetHeight) / 4 + 'px';
+                    if(first && last){
+                        this.style.top = (first.offsetHeight - last.offsetHeight) / 4 + 'px';
+                    }
                 }
             });
         }

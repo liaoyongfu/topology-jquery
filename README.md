@@ -60,10 +60,28 @@ $('#topology').topology({
     setType: (item) => item.type,
     setClassName: item => 'customClassName',
     showCloseBtn: item => item.label === '我要显示关闭按钮',
-    onClose: (item, data, elem) => {
+    closeTitle: '删除',
+    onClose: (item, data, e) => {
         console.info(item);
         console.info(data);
-        console.info(elem);
+        console.info(e);
+    },
+    onClick: (item, data, e) => {
+        console.info(item);
+        console.info(data);
+        console.info(e);
+    },
+    onAdd: (item, callback, e) => {
+        console.info('点击的数据：', item);
+        // 获取到数据后调用callback
+        callback([
+            {
+                label: '新增的节点1'
+            },
+            {
+                label: '新增的节点2'
+            }
+        ])
     }
 });
 ````
@@ -161,13 +179,16 @@ $('#topology-custom').topology({
 name | type | default | description
 --- | --- | --- | --- |
 data | array | [] | 数据源，包含label、value、children等字段
+onClick | function | - | 点击回调事件，参数：当前点击项的数据；所有数据；点击的事件对象
 cursor | one of: `default`、`pointer` | 'default' | 鼠标手型：包含默认、手型
 renderLabel | function | - | 自定义渲染项，参数为item
 setType | function | - | 增加样式类型，包含：error、success，其他请自己用样式增加
 setClassName | function | - | 增加自定义类名，参数为item
 showCloseBtn | function or boolean | false | 是否显示关闭按钮，支持bool或func类型
-onClose | function | - | 点击关闭按钮的回调函数，参数：当前点击项的数据；所有数据；当前点击项的DOM元素
+onClose | function | - | 点击关闭按钮的回调函数，参数：当前点击项的数据；所有数据；点击的事件对象
 closeTitle | string | '关闭' | 关闭按钮提示文字
+collapsedTitle | string | '收起' | 收起按钮的提示文字
+expandedTitle | string or function | `item => item.children && item.children.length > 0 ? '展开' : '添加节点'` | 展开/添加按钮的提示问题，如果是function，参数为item
 
 ## 注意事项
 
@@ -183,3 +204,11 @@ closeTitle | string | '关闭' | 关闭按钮提示文字
     background: #ff6600!important; // 这里是你背景的颜色
 }
 ````
+
+## 问题或建议
+
+http://192.168.0.62:88/components/topology-jquery/issues
+
+## 更新日志
+
+[更新日志](./CHANGELOG.md)

@@ -96,10 +96,26 @@ $('#topology').topology({
     setClassName: item => 'customClassName',
     showCloseBtn: item => item.label === '我要显示关闭按钮',
     closeTitle: '删除',
-    onClose: (item, data, elem) => {
+    onClose: (item, data, e) => {
         console.info(item);
         console.info(data);
-        console.info(elem);
+        console.info(e);
+    },
+    onClick: (item, data, e) => {
+        console.info(item);
+        console.info(data);
+        console.info(e);
+    },
+    onAdd: (item, callback, e) => {
+        console.info('点击的数据：', item);
+        callback([
+            {
+                label: '新增的节点1'
+            },
+            {
+                label: '新增的节点2'
+            }
+        ])
     }
 });
 

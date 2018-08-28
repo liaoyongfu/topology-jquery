@@ -9,19 +9,19 @@
 ## 安装
 
 ````
-yarn add @share/topology-jquery
+yarn add topology-jquery
 // or
-npm install @share/topology-jquery --save
+npm install topology-jquery --save
 ````
 
 ## 使用
 
 ````
 // css
-<script src="/path/to/@share/topology-jquery/dist/topology.css"></script>
+<script src="/path/to/topology-jquery/dist/topology.css"></script>
 
 // js
-<script src="/path/to/@share/topology-jquery/dist/topology.js"></script>
+<script src="/path/to/topology-jquery/dist/topology.js"></script>
 
 // 使用
 $('#topology').topology({

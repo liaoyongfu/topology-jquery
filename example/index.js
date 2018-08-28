@@ -9,7 +9,7 @@ require('font-awesome/css/font-awesome.min.css');
 
 let data = [
     {
-        label: '业务事项名称',
+        label: '业务事项名称业务事项名称',
         children: [
             {
                 label: '我要显示关闭按钮',
@@ -98,16 +98,16 @@ $('#topology').topology({
     closeTitle: '删除',
     onClose: (item, data, e) => {
         console.info(item);
-        console.info(data);
-        console.info(e);
+        // console.info(data);
+        // console.info(e);
     },
     onClick: (item, data, e) => {
         console.info(item);
-        console.info(data);
-        console.info(e);
+        // console.info(data);
+        // console.info(e);
     },
     onAdd: (item, callback, e) => {
-        console.info('点击的数据：', item);
+        // console.info('点击的数据：', item);
         callback([
             {
                 label: '新增的节点1'

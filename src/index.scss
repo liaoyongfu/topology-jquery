@@ -8,7 +8,7 @@ $bgColor: #fff;
     .label{
         display: inline-block;
         vertical-align: middle;
-        padding: 12px 30px;
+        padding: 8px 12px;
         border: 1px solid #ddd;
         border-radius: 4px;
         background-color: #f7f8f9;
@@ -17,6 +17,15 @@ $bgColor: #fff;
         z-index: 1;
         font-size: 12px;
         color: #74767a;
+
+        //span{
+        //    max-width: 9em;
+        //    overflow: hidden;
+        //    text-overflow: ellipsis;
+        //    white-space: nowrap;
+        //    display: inline-block;
+        //    vertical-align: middle;
+        //}
 
         .closeBtn{
             position: absolute;

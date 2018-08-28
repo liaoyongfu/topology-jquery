@@ -12,7 +12,9 @@ require('./index.scss');
                 showCloseBtn: false,
                 closeTitle: '关闭',
                 collapsedTitle: '收起',
-                expandedTitle: item => item.children && item.children.length > 0 ? '展开' : '添加节点',
+                expandedTitle: item => {
+                    return item.children && item.children.length > 0 ? '展开' : '添加节点'
+                },
                 setType: () => {},
                 onClick: () => {},
                 setClassName: () => {},
@@ -20,6 +22,8 @@ require('./index.scss');
             }, options);
 
             this.addUnitId(this.options.data);
+            // 动态保存所有data
+            this.tmpData = [...this.options.data];
             this.init();
         }
 
@@ -54,13 +58,14 @@ require('./index.scss');
             let topology = '';
             for (let i = 0; i < data.length; i++) {
                 let item = data[i];
+                const label = renderLabel ? renderLabel(item) : item.label;
                 topology += (`
                     <div class="item ${`level-${level}`}">
                         <div data-level="${level}" data-id="${item.__id__}" class="label 
                             ${item.children && item.children.length > 1 ? 'label-border-right' : ''} 
                             ${hasParent ? 'label-border-left' : ''} 
                             ${cursor === 'pointer' ? 'label-cursor' : ''} ${setType(item) ? `label-type-${setType(item)}` : ''} ${setClassName(item) || ''}">
-                            ${renderLabel ? renderLabel(item) : item.label}
+                            <span title="${label}">${label}</span>
                             ${typeof showCloseBtn === 'function' ? showCloseBtn(item, data) ? closeBtn(item) : '' : showCloseBtn ? closeBtn(item) : ''}
                             ${!item.children || item.children.length <= 0 ? `<i title="${typeof expandedTitle === 'function' ? expandedTitle(item) : expandedTitle}" class="toggleBtn fa fa-plus-circle"></i>` : ''}
                             ${item.children && item.children.length > 0 ? `<i title="${collapsedTitle}" class="toggleBtn toggleBtn-collapse fa fa-minus-circle"></i>` : ''}
@@ -78,12 +83,16 @@ require('./index.scss');
             return topology;
         }
 
-        find(arr, id){
+        find(arr, id, callback){
             for(let i = 0; i < arr.length; i++){
                 if(arr[i].__id__ === id){
+                    if(callback){
+                        arr[i] = callback(arr[i]);
+                    }
                     return arr[i];
                 }else if(arr[i].children){
-                    return this.find(arr[i].children, id);
+                    let a = this.find(arr[i].children, id, callback);
+                    if(a) return a;
                 }
             }
         }
@@ -98,7 +107,7 @@ require('./index.scss');
                 if(onClose){
                     const id = $(this).data('id');
 
-                    onClose(self.find(data, id), data, e);
+                    onClose(self.find(self.tmpData, id), self.tmpData, e);
                 }
             });
 
@@ -107,7 +116,7 @@ require('./index.scss');
                 e.stopPropagation();
                 const id = $(this).data('id');
 
-                onClick(self.find(data, id), data, e);
+                onClick(self.find(self.tmpData, id), self.tmpData, e);
             });
 
             // 收起或展开
@@ -130,7 +139,15 @@ require('./index.scss');
                 }else{
                     // 触发添加事件
                     const level = parseInt($(this).parent().data('level'));
-                    onAdd && onAdd(self.find(data, id), function(newNodes){
+                    onAdd && onAdd(self.find(self.tmpData, id), function(newNodes){
+                        self.addUnitId(newNodes);
+                        // 添加到tmpData
+                        self.find(self.tmpData, id, function(item){
+                            return {
+                                ...item,
+                                children: newNodes,
+                            }
+                        });
                         $(curElem).parent().addClass('label-border-right');
                         const newHtml = self.renderDom(newNodes, level + 1, true);
                         $("<div class='sub'>" + newHtml + "</div>").insertAfter($(curElem).parent());
@@ -141,7 +158,7 @@ require('./index.scss');
                 if($(this).hasClass('fa-plus-circle')){
                     $(this).attr('title', collapsedTitle);
                 }else{
-                    $(this).attr('title', typeof expandedTitle === 'function' ? expandedTitle(self.find(data, id)) : expandedTitle);
+                    $(this).attr('title', typeof expandedTitle === 'function' ? expandedTitle(self.find(self.tmpData, id)) : expandedTitle);
                 }
                 $(this).toggleClass('fa-plus-circle').toggleClass('fa-minus-circle');
             });
@@ -157,7 +174,7 @@ require('./index.scss');
                     const last = next.lastElementChild;
 
                     if(first && last){
-                        this.style.top = (first.offsetHeight - last.offsetHeight) / 4 + 'px';
+                        next.style.marginBottom = (first.offsetHeight - last.offsetHeight) / 2 + 'px';
                     }
                 }
             });

@@ -2,6 +2,10 @@
 
 ![demo](example/demo.png)
 
+## 兼容性
+
+兼容IE9及以上。
+
 ## 安装
 
 ````
@@ -9,8 +13,6 @@ yarn add @share/topology-jquery
 // or
 npm install @share/topology-jquery --save
 ````
-
-或者到gitlab地址中下载：http://192.168.0.62:88/components/topology-jquery/tree/master/dist
 
 ## 使用
 
@@ -38,7 +40,7 @@ $('#topology').topology({
 查看示例：
 
 ````
-git clone [本项目gitlab地址]
+git clone [本项目地址]
 yarn
 npm start
 ````
@@ -204,10 +206,6 @@ expandedTitle | string or function | `item => item.children && item.children.len
     background: #ff6600!important; // 这里是你背景的颜色
 }
 ````
-
-## 问题或建议
-
-http://192.168.0.62:88/components/topology-jquery/issues
 
 ## 更新日志
 

@@ -9,6 +9,7 @@ module.exports = webpackMerge(common, {
     entry: './src/index.js',
     mode: 'production',
     externals: [nodeExternals()],
+    // externals: ['jquery'],
     module: {
         rules: [
             {

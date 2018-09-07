@@ -3,7 +3,7 @@ const $ = require('jquery');
 // import '../dist/topology';
 // import '../dist/topology.css';
 // 这里可以测试开发时的文件；
-require('../src');
+require('../src/index');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('font-awesome/css/font-awesome.min.css');
 

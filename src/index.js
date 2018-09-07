@@ -62,9 +62,9 @@ require('./index.scss');
                 topology += (`
                     <div class="item ${`level-${level}`}">
                         <div data-level="${level}" data-id="${item.__id__}" class="label 
-                            ${item.children && item.children.length > 1 ? 'label-border-right' : ''} 
-                            ${hasParent ? 'label-border-left' : ''} 
-                            ${cursor === 'pointer' ? 'label-cursor' : ''} ${setType(item) ? `label-type-${setType(item)}` : ''} ${setClassName(item) || ''}">
+                            ${item.children && item.children.length > 1 ? 'label-border-right ' : ''} 
+                            ${hasParent ? 'label-border-left ' : ''} 
+                            ${cursor === 'pointer' ? 'label-cursor ' : ''} ${setType(item) ? `label-type-${setType(item)} ` : ' '} ${setClassName(item) || ''}">
                             <span title="${label}">${label}</span>
                             ${typeof showCloseBtn === 'function' ? showCloseBtn(item, data) ? closeBtn(item) : '' : showCloseBtn ? closeBtn(item) : ''}
                             ${!item.children || item.children.length <= 0 ? `<i title="${typeof expandedTitle === 'function' ? expandedTitle(item) : expandedTitle}" class="toggleBtn fa fa-plus-circle"></i>` : ''}
